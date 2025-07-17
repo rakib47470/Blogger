@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Blogger Video Card Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta property="og:title" content="Movie Update 2025" />
+  <meta property="og:description" content="Get the latest movie updates and downloads." />
+  <meta property="og:image" id="ogImage" content="" /> 
+  <meta property="og:url" content="YOUR_BLOG_POST_URL_HERE" /> 
+  <meta property="og:type" content="website" />
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h2 {
+      color: #00f7ff;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #cardCounter {
+      background: #007bff;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      user-select: none;
+    }
+    .input-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      gap: 8px;
+    }
+    /* Slim input boxes with 37px height */
+    input[type="text"] {
+      flex-grow: 1;
+      padding: 6px 10px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: none;
+      height: 37px;
+      background-color: #222;
+      color: white;
+      box-sizing: border-box;
+      transition: all 0.3s ease; /* Transition for smooth scaling */
+    }
+    button {
+      padding: 0 18px;
+      height: 37px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+      box-sizing: border-box;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    button:disabled {
+      background-color: #555;
+      cursor: not-allowed;
+    }
+
+    /* Glow Animation */
+    @keyframes buttonGlow {
+      0% { box-shadow: 0 0 0px var(--glow-color, #007bff); }
+      50% { box-shadow: 0 0 15px var(--glow-color, #007bff), 0 0 25px var(--glow-color, #007bff); }
+      100% { box-shadow: 0 0 0px var(--glow-color, #007bff); }
+    }
+
+    .glowing {
+      animation: buttonGlow 0.6s ease-out; /* Adjusted animation duration */
+    }
+
+    /* Updated styles for the new button group */
+    .action-buttons-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px; 
+      margin-top: 15px; /* Adjust margin if needed */
+      margin-bottom: 20px; 
+    }
+    .action-buttons-group button {
+      flex-grow: 1; 
+      padding: 12px;
+      font-size: 16px;
+      height: auto; 
+      border-radius: 10px;
+      font-weight: bold; /* Make buttons bold */
+    }
+    #applyLogoTitleBtn {
+      background-color: #6c757d; /* Grey for apply button */
+      --glow-color: #6c757d; /* Define glow color for this button */
+    }
+    #applyLogoTitleBtn:hover {
+      background-color: #5a6268;
+    }
+    #generateCardBtn { /* Renamed from #generateBtn */
+      background-color: #007bff; /* Default blue for generate */
+      --glow-color: #007bff; /* Define glow color for this button */
+    }
+    #generateCardBtn:hover {
+      background-color: #0056b3;
+    }
+    /* New style for when generateCardBtn is in editing mode */
+    #generateCardBtn.editing { 
+        background-color: #ffc107; /* Yellow for update */
+        color: #333; /* Dark text for yellow button */
+        --glow-color: #ffc107; /* Define glow color for yellow button */
+    }
+    #generateCardBtn.editing:hover {
+        background-color: #e0a800; /* Darker yellow on hover */
+    }
+    #generateCardBtn:disabled { /* Keep disabled style */
+        background-color: #555;
+        cursor: not-allowed;
+        color: white; /* Ensure text color is white when disabled */
+        --glow-color: #555; /* Define glow color for disabled button */
+    }
+
+
+    textarea {
+      background: #111;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+      width: 100%;
+      color: #0f0;
+      font-family: monospace;
+      resize: vertical;
+      overflow-y: auto;
+    }
+    
+    /* New styles for the import HTML area to make it slim like input boxes */
+    #importHtmlArea {
+        height: 37px; /* Match input height */
+        padding: 6px 10px; /* Match input padding */
+        box-sizing: border-box; /* Include padding in height calculation */
+        white-space: nowrap; /* Prevent text wrapping */
+        overflow: hidden; /* Hide overflow */
+        text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+        resize: none; /* Disable resizing */
+    }
+
+    /* Original textarea */
+    #generatedCode {
+      height: 200px; /* Adjusted height for the original textarea */
+    }
+
+    .textarea-with-button {
+        display: flex;
+        gap: 8px; /* Space between textarea and button */
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .textarea-with-button textarea {
+        flex-grow: 1;
+        margin-top: 0; /* Override default margin */
+        margin-bottom: 0; /* Override default margin */
+    }
+    .textarea-with-button button {
+        height: 37px; /* Match input/textarea height */
+        padding: 0 15px; /* Adjust padding for a smaller button */
+        font-size: 14px;
+        --glow-color: #28a745; /* Green glow for apply import button */
+    }
+
+
+    .copied-msg {
+      color: #0f0;
+      margin-top: 10px;
+      display: none;
+      text-align: center;
+      font-weight: bold;
+    }
+    .video-card {
+      background-color: #1e1e1e;
+      border-radius: 20px;
+      overflow: hidden;
+      padding: 15px;
+      margin-bottom: 20px;
+      position: relative; /* Added for button positioning */
+    }
+    .thumbnail-wrapper {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      height: 260px;
+    }
+    .thumbnail-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(6px);
+      transition: filter 0.4s ease;
+    }
+    .thumbnail-wrapper:hover img {
+      filter: blur(0);
+    }
+    .thumbnail-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 60px;
+      height: 60px;
+      background: rgba(0, 123, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      animation: pulse 2s infinite;
+    }
+    .thumbnail-wrapper::after {
+      content: '\25B6'; /* CSS ইউনিকোড এস্কেপ ব্যবহার করা হয়েছে */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      font-size: 28px;
+      color: white;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0,123,255,0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(0,123,255,0); }
+      100% { box-shadow: 0 0 0 0 rgba(0,123,255,0); }
+    }
+    .duration {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background-color: rgba(0,0,0,0.75);
+      padding: 4px 8px;
+      font-size: 13px;
+      border-radius: 4px;
+      color: #fff;
+      z-index: 4;
+      font-weight: bold;
+    }
+    .download-button {
+      margin: 18px auto 5px;
+      background-color: #007bff;
+      color: white;
+      padding: 14px 25px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 12px;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      width: 80%;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 0 8px #007bff;
+      transition: box-shadow 0.3s ease;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .download-button::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 120%;
+      height: 120%;
+      background: radial-gradient(circle, rgba(0,123,255,0.4) 10%, transparent 70%);
+      transform: translate(-50%, -50%) scale(1);
+      border-radius: 12px;
+      opacity: 0;
+      animation: pulseShadow 2.5s infinite;
+      z-index: -1;
+    }
+    .download-button:hover {
+      box-shadow: 0 0 20px #007bff;
+    }
+    @keyframes pulseShadow {
+      0% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      50% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.5);
+      }
+      100% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+    #copyBtn {
+      margin: 12px auto 0 auto;
+      background-color: #007bff;
+      color: white;
+      padding: 12px 25px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 12px;
+      border: none;
+      display: block;
+      width: 100%;
+      cursor: pointer;
+      box-shadow: 0 0 8px #007bff;
+      transition: background-color 0.3s ease;
+      --glow-color: #007bff; /* Define glow color for copy button */
+    }
+    #copyBtn:hover {
+      background-color: #0056b3;
+    }
+    /* Main logo section container */
+    .main-logo-section {
+      display: flex;
+      flex-wrap: wrap; 
+      align-items: center; 
+      justify-content: space-between; 
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #1a1a1a;
+      border-radius: 10px;
+      box-sizing: border-box; 
+    }
+    /* Title (h1) styling */
+    .main-logo-section h1 {
+      margin: 0;
+      font-size: 20px; 
+      color: #00f7ff;
+      word-wrap: break-word; 
+      overflow-wrap: break-word; 
+      flex-basis: calc(100% - 50px - 10px); 
+      max-width: calc(100% - 50px - 10px); 
+      line-height: 1.2; 
+      text-align: left; 
+      margin-right: 10px; 
+      box-sizing: border-box;
+      transition: font-size 0.3s ease;
+    }
+    /* Logo image styling */
+    .main-logo-section img {
+      width: 50px; 
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 8px rgba(0, 247, 255, 0.5);
+      flex-shrink: 0; 
+    }
+
+    /* Styles for the logo/title input group */
+    .logo-title-input-group {
+        display: flex;
+        flex-direction: row; 
+        flex-wrap: nowrap; 
+        gap: 8px; 
+        margin-bottom: 15px;
+        align-items: center; 
+    }
+
+    .logo-title-input-group .input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px; 
+        flex-grow: 1; 
+        flex-basis: 50%; 
+        transition: flex-grow 0.3s ease; 
+        min-width: 0; 
+    }
+
+    /* Default state for inputs in this group */
+    .logo-title-input-group input[type="text"] {
+        flex-grow: 1; 
+        min-width: 0; 
+    }
+
+    /* Clear button styling */
+    .clear-small-btn {
+        padding: 0 10px; 
+        height: 37px;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        background-color: #dc3545; 
+        color: white;
+        flex-shrink: 0; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease; 
+        
+        /* Hidden by default */
+        width: 0;
+        padding: 0;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none; 
+        --glow-color: #dc3545; /* Define glow color for clear buttons */
+    }
+    .clear-small-btn.visible {
+        width: auto; 
+        padding: 0 10px;
+        opacity: 1;
+        pointer-events: auto; 
+    }
+    .clear-small-btn:hover {
+        background-color: #c82333;
+    }
+
+    /* Focus effect: clicked input grows, its clear button visible, other input shrinks with hidden clear button */
+    .logo-title-input-group .input-wrapper.focused {
+        flex-grow: 3; 
+    }
+    .logo-title-input-group .input-wrapper.focused .clear-small-btn {
+        width: auto; 
+        padding: 0 10px;
+        opacity: 1;
+        pointer-events: auto; 
+    }
+    .logo-title-input-group .input-wrapper:not(.focused) {
+        flex-grow: 1; 
+    }
+    .logo-title-input-group .input-wrapper:not(.focused) .clear-small-btn {
+        width: 0; 
+        padding: 0;
+        opacity: 0;
+        pointer-events: none; 
+    }
+
+    /* New styles for helper buttons (top) */
+    .helper-buttons-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px; 
+      margin-top: 20px; 
+      margin-bottom: 20px; 
+    }
+    .helper-buttons-group button {
+      flex-grow: 1; 
+      padding: 12px;
+      font-size: 16px;
+      height: auto; 
+      border-radius: 10px;
+    }
+    .helper-buttons-group button#getImageLinkBtn {
+      background-color: #28a745; /* Green for image link */
+      --glow-color: #28a745; /* Define glow color */
+    }
+    .helper-buttons-group button#getImageLinkBtn:hover {
+      background-color: #218838;
+    }
+    .helper-buttons-group button#getShortLinkBtn {
+      background-color: #ffc107; /* Yellow for short link */
+      color: #333; /* Dark text for yellow button */
+      --glow-color: #ffc107; /* Define glow color */
+    }
+    .helper-buttons-group button#getShortLinkBtn:hover {
+      background-color: #e0a800;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1000; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+      backdrop-filter: blur(5px); /* Blur background */
+      -webkit-backdrop-filter: blur(5px); /* Safari support */
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+    }
+
+    .modal-content {
+      background-color: #1a1a1a;
+      margin: auto;
+      padding: 0; /* Remove padding here, iframe will handle it */
+      border: 1px solid #888;
+      width: 90%;
+      max-width: 900px; /* Max width for larger screens */
+      height: 90%;
+      max-height: 600px; /* Max height for larger screens */
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden; /* Hide iframe scrollbars if content is larger than modal */
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      position: relative; /* For close button positioning */
+    }
+
+    .modal-header {
+      padding: 10px 15px;
+      background-color: #2a2a2a;
+      color: white;
+      border-bottom: 1px solid #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 18px;
+      font-weight: bold;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+    }
+
+    .modal-body {
+      flex-grow: 1;
+      display: flex; /* To make iframe take full height */
+      overflow: hidden; /* To hide scrollbars if iframe content overflows */
+    }
+
+    .modal-body iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background-color: #000; /* Fallback background for iframe */
+    }
+
+    .close-button {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 5px 10px;
+      line-height: 1;
+      transition: color 0.3s ease;
+    }
+
+    .close-button:hover,
+    .close-button:focus {
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* Edit/Delete Buttons for Preview */
+    .card-actions {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        gap: 8px;
+        z-index: 5; /* Ensure buttons are above other content */
+    }
+    .card-actions button {
+        height: 30px;
+        padding: 0 10px;
+        font-size: 12px;
+        border-radius: 5px;
+        background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+    }
+    .card-actions button:hover {
+        background-color: rgba(0, 0, 0, 0.9);
+        border-color: rgba(255, 255, 255, 0.8);
+    }
+    .card-actions .edit-btn {
+        background-color: #007bff; /* Blue */
+        --glow-color: #007bff; /* Define glow color */
+    }
+    .card-actions .edit-btn:hover {
+        background-color: #0056b3;
+    }
+    .card-actions .delete-btn {
+        background-color: #dc3545; /* Red */
+        --glow-color: #dc3545; /* Define glow color */
+    }
+    .card-actions .delete-btn:hover {
+        background-color: #c82333;
+    }
+    /* Disable edit/delete for other cards when one is being edited */
+    .video-card.editing .card-actions button:not(.active-edit),
+    .video-card.editing .card-actions button:not(.active-delete) {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🎬 Blogger Video Card Generator <span id="cardCounter">0</span></h2>
+
+  <div class="helper-buttons-group">
+    <button id="getImageLinkBtn" type="button">🖼️ Get Image Link</button>
+    <button id="getShortLinkBtn" type="button">🔗 Get Short Link</button>
+  </div>
+
+  <div class="input-group">
+    <input type="text" id="imgUrl" placeholder="📷 Thumbnail Image URL" />
+    <button id="clearImgBtn" type="button">Clear</button>
+  </div>
+
+  <div class="input-group">
+    <input type="text" id="downloadLink" placeholder="🔗 Download Link" />
+    <button id="clearDownloadBtn" type="button">Clear</button>
+  </div>
+
+  <div class="input-group">
+    <input type="text" id="duration" placeholder="⏱ Duration (e.g. 33:45)" maxlength="5" />
+    <button id="generateDurationBtn" type="button">⏱ Generate</button>
+  </div>
+
+  <div class="logo-title-input-group">
+    <div class="input-wrapper" id="logoInputWrapper">
+        <input type="text" id="logoUrl" placeholder="🖼️ Logo Image URL (Optional)" />
+        <button id="clearLogoBtn" class="clear-small-btn" type="button">❌ Clear</button>
+    </div>
+    <div class="input-wrapper" id="titleInputWrapper">
+        <input type="text" id="customTitle" placeholder="✍️ Custom Title (Optional)" />
+        <button id="clearTitleBtn" class="clear-small-btn" type="button">❌ Clear</button>
+    </div>
+  </div>
+
+  <div class="action-buttons-group">
+    <button id="applyLogoTitleBtn" type="button">✅ Apply Logo & Title</button>
+    <button id="generateCardBtn" type="button">➕ Generate Card</button>
+  </div>
+
+  <h3>📄 Import Existing HTML:</h3>
+  <div class="textarea-with-button">
+    <textarea id="importHtmlArea" placeholder="Paste your Blogger video card HTML here to edit/delete..."></textarea>
+    <button id="applyImportBtn" type="button">Apply</button>
+  </div>
+
+  <h3>📄 Blogger Post Code:</h3>
+  <textarea id="generatedCode" readonly></textarea>
+  <button id="copyBtn" type="button">📋 Copy Code</button>
+  <div class="copied-msg" id="copiedMsg">✅ Code copied successfully!</div>
+
+  <h3>✨ Video Card Preview:</h3>
+  <div id="previewContainer"></div>
+
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span id="modalTitle"></span>
+        <span class="close-button">&times;</span>
+      </div>
+      <div class="modal-body">
+        <iframe id="imageLinkIframe" src="" allowfullscreen></iframe> 
+        <iframe id="shortLinkIframe" src="" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Global Variables ---
+    let cardsData = []; 
+    let editingCardIndex = -1; 
+    let currentLogoUrl = ""; 
+    let currentTitleText = "Movie Update 2025"; 
+
+    // --- DOM Elements ---
+    const ogImageMeta = document.getElementById("ogImage");
+    const generatedCodeEl = document.getElementById("generatedCode");
+    const cardCounter = document.getElementById("cardCounter");
+    const copiedMsg = document.getElementById("copiedMsg");
+    const imgInput = document.getElementById("imgUrl");
+    const downloadInput = document.getElementById("downloadLink");
+    const durationInput = document.getElementById("duration");
+
+    const logoInput = document.getElementById("logoUrl");
+    const customTitleInput = document.getElementById("customTitle");
+    const clearLogoBtn = document.getElementById("clearLogoBtn");
+    const clearTitleBtn = document.getElementById("clearTitleBtn");
+    const logoInputWrapper = document.getElementById("logoInputWrapper");
+    const titleInputWrapper = document.getElementById("titleInputWrapper");
+
+    const applyLogoTitleBtn = document.getElementById("applyLogoTitleBtn");
+    const generateCardBtn = document.getElementById("generateCardBtn");
+
+    const importHtmlArea = document.getElementById("importHtmlArea"); 
+    const applyImportBtn = document.getElementById("applyImportBtn"); 
+
+    const previewContainer = document.getElementById("previewContainer");
+
+    // Helper buttons (top)
+    const getImageLinkBtn = document.getElementById("getImageLinkBtn");
+    const getShortLinkBtn = document.getElementById("getShortLinkBtn");
+
+    // Modal elements
+    const myModal = document.getElementById("myModal");
+    const closeButton = document.querySelector(".close-button");
+    const modalTitle = document.getElementById("modalTitle");
+    const imageLinkIframe = document.getElementById("imageLinkIframe"); 
+    const shortLinkIframe = document.getElementById("shortLinkIframe");
+
+    // --- Initialization ---
+    generatedCodeEl.value = ""; 
+    ogImageMeta.setAttribute("content", ""); 
+    updateLogoAndTitleSection(); 
+    setInitialState(); 
+    updateGenerateButtonText(); 
+
+    // --- Helper Functions ---
+
+    function updateLogoAndTitleSection() {
+        const titleToUse = customTitleInput.value.trim(); 
+        const logoUrlToUse = logoInput.value.trim(); 
+
+        currentTitleText = titleToUse || "Movie Update 2025"; 
+        currentLogoUrl = logoUrlToUse; 
+        
+        ogImageMeta.setAttribute("content", currentLogoUrl || "");
+
+        renderPreview(); 
+    }
+
+    function handleInputFocus(wrapperElement) {
+        logoInputWrapper.classList.remove('focused');
+        titleInputWrapper.classList.remove('focused');
+        wrapperElement.classList.add('focused');
+    }
+
+    function setInitialState() {
+        logoInputWrapper.classList.remove('focused');
+        titleInputWrapper.classList.remove('focused');
+    }
+
+    function generateRandomDuration(min, max) {
+      const minM = Math.floor(min);
+      const maxM = Math.floor(max);
+      const randomMin = Math.floor(Math.random() * (maxM - minM + 1)) + minM;
+      const randomSec = Math.floor(Math.random() * 60);
+      return `${String(randomMin).padStart(2, '0')}:${String(randomSec).padStart(2, '0')}`;
+    }
+
+    function updateCount() {
+      cardCounter.textContent = cardsData.length;
+    }
+    
+    function updateGenerateButtonText() {
+        if (editingCardIndex !== -1) {
+            generateCardBtn.textContent = "🔄 Update Card";
+            generateCardBtn.classList.add('editing'); 
+        } else {
+            generateCardBtn.textContent = "➕ Generate Card";
+            generateCardBtn.classList.remove('editing'); 
+        }
+    }
+
+    function renderPreview() {
+      previewContainer.innerHTML = ''; 
+      const fullPreviewHtml = [];
+
+      const titleToUse = currentTitleText; 
+      const logoUrlToUse = currentLogoUrl; 
+      
+      let titleElement = `<h1 style="font-size: 20px; line-height: 1.2;">${titleToUse}</h1>`;
+      if (titleToUse.length > 25) { 
+          titleElement = `<h1 style="font-size: 16px; line-height: 1.2;">${titleToUse}</h1>`;
+      } else if (titleToUse.length > 15) { 
+          titleElement = `<h1 style="font-size: 18px; line-height: 1.2;">${titleToUse}</h1>`;
+      }
+      
+      if (logoUrlToUse || (customTitleInput.value.trim() !== "" && customTitleInput.value.trim() !== "Movie Update 2025")) {
+          if (logoUrlToUse) {
+              fullPreviewHtml.push(`
+<div class="main-logo-section">
+  ${titleElement}
+  <img src="${logoUrlToUse}" alt="${titleToUse} Logo" />
+</div>`);
+          } else {
+              fullPreviewHtml.push(`
+<div class="main-logo-section">
+  ${titleElement}
+</div>`);
+          }
+      }
+
+      cardsData.forEach((card, index) => {
+        const cardHtml = `
+<div class="video-card ${editingCardIndex === index ? 'editing' : ''}" data-index="${index}">
+  <div class="card-actions">
+    <button class="edit-btn" data-index="${index}" ${editingCardIndex !== -1 && editingCardIndex !== index ? 'disabled' : ''}>✏️ Edit</button>
+    <button class="delete-btn" data-index="${index}" ${editingCardIndex !== -1 && editingCardIndex !== index ? 'disabled' : ''}>🗑️ Delete</button>
+  </div>
+  <div class="thumbnail-wrapper">
+    <img src="${card.imgUrl}" alt="Thumbnail" />
+    <div class="duration">${card.duration}</div>
+  </div>
+  <a href="${card.downloadLink}" class="download-button" download>Download</a>
+</div>`;
+        fullPreviewHtml.push(cardHtml);
+      });
+      previewContainer.innerHTML = fullPreviewHtml.join('\n');
+      addCardActionListeners(); 
+    }
+
+    function addCardActionListeners() {
+      document.querySelectorAll('.edit-btn').forEach(button => {
+        button.onclick = (e) => editCard(parseInt(e.target.dataset.index));
+      });
+      document.querySelectorAll('.delete-btn').forEach(button => {
+        button.onclick = (e) => deleteCard(parseInt(e.target.dataset.index));
+      });
+    }
+
+    function editCard(index) {
+        if (editingCardIndex === index) {
+            editingCardIndex = -1;
+            imgInput.value = "";
+            downloadInput.value = "";
+            durationInput.value = "";
+            
+        } else {
+            editingCardIndex = index;
+            const card = cardsData[index];
+            imgInput.value = card.imgUrl;
+            downloadInput.value = card.downloadLink;
+            durationInput.value = card.duration;
+            
+        }
+        updateGenerateButtonText();
+        renderPreview(); 
+    }
+
+    function deleteCard(index) {
+        if (confirm("আপনি কি এই ভিডিও কার্ডটি মুছে ফেলতে চান?")) {
+            cardsData.splice(index, 1); 
+            updateCount();
+            renderPreview();
+            generatedCodeEl.value = generateFullHtmlCode(); 
+            if (cardsData.length === 0) { 
+                 generatedCodeEl.value = "";
+            }
+
+            if (editingCardIndex === index) {
+                editingCardIndex = -1;
+                imgInput.value = "";
+                downloadInput.value = "";
+                durationInput.value = "";
+                updateGenerateButtonText();
+            } else if (editingCardIndex > index) {
+                editingCardIndex--;
+            }
+        }
+    }
+
+    // --- Function to handle glowing effect ---
+    function addGlowEffect(button) {
+      if (button.classList.contains('glowing')) {
+        button.classList.remove('glowing');
+        void button.offsetWidth; 
+      }
+      button.classList.add('glowing');
+    }
+
+    // --- New: Parse HTML and Load Cards ---
+    function parseHtmlAndLoadCards() {
+        const html = importHtmlArea.value.trim();
+        if (!html) {
+            alert("অনুগ্রহ করে লোড করার জন্য HTML কোড পেস্ট করুন।");
+            return;
+        }
+
+        cardsData = []; // Clear existing cards
+        
+        // Create a temporary div to parse the HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+
+        // Check for main-logo-section and extract logo/title
+        const mainLogoSection = tempDiv.querySelector('.main-logo-section');
+        if (mainLogoSection) {
+            const logoImg = mainLogoSection.querySelector('img');
+            const titleH1 = mainLogoSection.querySelector('h1');
+
+            if (logoImg && logoImg.src) {
+                logoInput.value = logoImg.src;
+                currentLogoUrl = logoImg.src;
+            } else {
+                logoInput.value = "";
+                currentLogoUrl = "";
+            }
+
+            if (titleH1 && titleH1.textContent) {
+                customTitleInput.value = titleH1.textContent;
+                currentTitleText = titleH1.textContent;
+            } else {
+                customTitleInput.value = "";
+                currentTitleText = "Movie Update 2025"; // Reset to default
+            }
+        } else {
+            // If no main-logo-section, ensure inputs are cleared/defaulted
+            logoInput.value = "";
+            customTitleInput.value = "";
+            currentLogoUrl = "";
+            currentTitleText = "Movie Update 2025";
+        }
+        
+        // Update OG meta tag
+        ogImageMeta.setAttribute("content", currentLogoUrl || "");
+
+
+        // Find all video cards
+        const videoCards = tempDiv.querySelectorAll('.video-card');
+        if (videoCards.length === 0) {
+            alert("পেস্ট করা HTML এ কোনো ভিডিও কার্ড পাওয়া যায়নি।");
+            updateCount();
+            renderPreview();
+            generatedCodeEl.value = generateFullHtmlCode();
+            return;
+        }
+
+        videoCards.forEach(cardEl => {
+            const imgEl = cardEl.querySelector('.thumbnail-wrapper img');
+            const durationEl = cardEl.querySelector('.duration');
+            const downloadBtn = cardEl.querySelector('.download-button');
+
+            const imgUrl = imgEl ? imgEl.src : '';
+            const duration = durationEl ? durationEl.textContent.trim() : '';
+            const downloadLink = downloadBtn ? downloadBtn.href : '';
+
+            if (imgUrl && downloadLink && duration) {
+                cardsData.push({ imgUrl, downloadLink, duration });
+            }
+        });
+
+        updateCount();
+        renderPreview();
+        generatedCodeEl.value = generateFullHtmlCode();
+        alert(`${cardsData.length}টি ভিডিও কার্ড সফলভাবে লোড করা হয়েছে!`);
+        importHtmlArea.value = ""; // Clear import area after successful import
+    }
+
+
+    // --- Event Listeners ---
+
+    // Apply glow effect to all buttons when clicked
+    document.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', (event) => {
+            if (event.target.classList.contains('close-button')) {
+                return; 
+            }
+            if (event.target.closest('.card-actions')) {
+                return; 
+            }
+            addGlowEffect(button);
+        });
+    });
+
+
+    // Duration Input Formatting
+    durationInput.addEventListener('input', () => {
+      let val = durationInput.value.replace(/[^\d]/g, '');
+      if(val.length > 2) {
+        val = val.slice(0,2) + ':' + val.slice(2,4);
+      }
+      durationInput.value = val;
+    });
+
+    // Generate Random Duration
+    document.getElementById("generateDurationBtn").addEventListener("click", () => {
+      durationInput.value = generateRandomDuration(20, 55);
+    });
+
+    // Clear Buttons for main inputs
+    document.getElementById("clearImgBtn").addEventListener("click", () => {
+      imgInput.value = "";
+    });
+
+    document.getElementById("clearDownloadBtn").addEventListener("click", () => {
+      downloadInput.value = "";
+    });
+
+    // Logo/Title Input Focus & Clear
+    logoInput.addEventListener('focus', () => handleInputFocus(logoInputWrapper));
+    customTitleInput.addEventListener('focus', () => handleInputFocus(titleInputWrapper));
+
+    logoInput.addEventListener('blur', () => {
+        setTimeout(() => {
+            if (document.activeElement !== clearLogoBtn) {
+                logoInputWrapper.classList.remove('focused');
+            }
+        }, 100); 
+    });
+    customTitleInput.addEventListener('blur', () => {
+        setTimeout(() => {
+            if (document.activeElement !== clearTitleBtn) {
+                titleInputWrapper.classList.remove('focused');
+            }
+        }, 100); 
+    });
+
+    clearLogoBtn.addEventListener('click', (event) => {
+        event.preventDefault(); 
+        logoInput.value = "";
+        updateLogoAndTitleSection(); 
+        logoInput.focus(); 
+    });
+
+    clearTitleBtn.addEventListener('click', (event) => {
+        event.preventDefault(); 
+        customTitleInput.value = "";
+        updateLogoAndTitleSection(); 
+        customTitleInput.focus(); 
+    });
+
+    // --- New Apply Logo & Title Button ---
+    applyLogoTitleBtn.addEventListener("click", () => {
+        updateLogoAndTitleSection(); 
+        generatedCodeEl.value = generateFullHtmlCode(); 
+    });
+
+
+    // --- Main Generate/Update Button (Renamed from generateBtn) ---
+    generateCardBtn.addEventListener("click", () => {
+      const img = imgInput.value.trim();
+      const link = downloadInput.value.trim();
+      const duration = durationInput.value.trim();
+
+      if(!img || !link || !duration) {
+        alert("⛔ দয়া করে থাম্বনেইল, ডাউনলোড লিঙ্ক এবং সময়কাল পূরণ করুন!");
+        return;
+      }
+
+      if(!/^\d{1,2}:\d{2}$/.test(duration)) {
+        alert("⛔ Duration ফরম্যাট সঠিক নয়! (উদাহরণ: 33:45)");
+        return;
+      }
+
+      const newCard = { imgUrl: img, downloadLink: link, duration: duration };
+
+      if (editingCardIndex !== -1) {
+        cardsData[editingCardIndex] = newCard;
+        editingCardIndex = -1; 
+      } else {
+        cardsData.push(newCard);
+      }
+      
+      updateCount();
+      renderPreview();
+      generatedCodeEl.value = generateFullHtmlCode(); 
+      updateGenerateButtonText(); 
+
+      imgInput.value = "";
+      durationInput.value = "";
+      copiedMsg.style.display = "none";
+    });
+
+    // --- Copy Code Button ---
+    document.getElementById("copyBtn").addEventListener("click", () => {
+      const updatedFullCode = generateFullHtmlCode(); 
+      generatedCodeEl.value = updatedFullCode; 
+
+      navigator.clipboard.writeText(updatedFullCode).then(() => {
+        copiedMsg.style.display = "block";
+        setTimeout(() => {
+          copiedMsg.style.display = "none";
+        }, 1500);
+      }).catch(() => {
+        alert("Copy failed! দয়া করে ম্যানুয়ালি কপি করুন।");
+      });
+
+      // --- Reset generator state after copying code ---
+      cardsData = []; 
+      editingCardIndex = -1;
+      currentLogoUrl = ""; 
+      currentTitleText = "Movie Update 2025"; 
+      
+      logoInput.value = ""; 
+      customTitleInput.value = ""; 
+      
+      ogImageMeta.setAttribute("content", ""); 
+      
+      updateCount();
+      previewContainer.innerHTML = "";
+      
+      imgInput.value = "";
+      durationInput.value = "";
+      downloadInput.value = ""; 
+      
+      generatedCodeEl.value = ""; 
+      importHtmlArea.value = ""; // Clear import area on full reset
+
+      updateLogoAndTitleSection(); 
+      setInitialState(); 
+      updateGenerateButtonText(); 
+    });
+
+    // --- New: Event Listener for Apply Import Button ---
+    applyImportBtn.addEventListener("click", parseHtmlAndLoadCards);
+
+
+    // --- Modal Functionality ---
+    closeButton.addEventListener("click", () => {
+      myModal.style.display = "none";
+      imageLinkIframe.src = ""; 
+      shortLinkIframe.src = ""; 
+    });
+
+    window.addEventListener("click", (event) => {
+      if (event.target == myModal) {
+        myModal.style.display = "none";
+        imageLinkIframe.src = ""; 
+        shortLinkIframe.src = ""; 
+      }
+    });
+
+    getImageLinkBtn.addEventListener("click", () => {
+        window.open("https://postimages.org/", '_blank', 'width=800,height=600,noopener,noreferrer');
+    });
+
+    getShortLinkBtn.addEventListener("click", () => {
+        modalTitle.textContent = "🔗 Cutt.ly (URL Shortener)";
+        shortLinkIframe.style.display = "block";
+        imageLinkIframe.style.display = "none"; 
+        shortLinkIframe.src = "https://www.cutly.in/";
+        myModal.style.display = "flex"; 
+    });
+
+
+    // --- Full HTML Code Generation (for Copy Button) ---
+    function generateFullHtmlCode() {
+      const css = `
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+.video-card {
+  background-color: #1e1e1e;
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+.thumbnail-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  height: 260px;
+}
+.thumbnail-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(6px);
+  transition: filter 0.4s ease;
+}
+.thumbnail-wrapper:hover img {
+  filter: blur(0);
+}
+.thumbnail-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  background: rgba(0, 123, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  animation: pulse 2s infinite;
+}
+.thumbnail-wrapper::after {
+  content: '\\25B6';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 28px;
+  color: white;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0,123,255,0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(0,123,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,123,255,0); }
+}
+.duration {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(0,0,0,0.75);
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
+  color: #fff;
+  z-index: 4;
+  font-weight: bold;
+}
+.download-button {
+  margin: 18px auto 5px;
+  background-color: #007bff;
+  color: white;
+  padding: 14px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 12px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  width: 80%;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 0 8px #007bff;
+  transition: box-shadow 0.3s ease;
+  margin-left: auto;
+  margin-right: auto;
+}
+.download-button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle, rgba(0,123,255,0.4) 10%, transparent 70%);
+  transform: translate(-50%, -50%) scale(1);
+  border-radius: 12px;
+  opacity: 0;
+  animation: pulseShadow 2.5s infinite;
+  z-index: -1;
+}
+.download-button:hover {
+  box-shadow: 0 0 20px #007bff;
+}
+@keyframes pulseShadow {
+  0% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+  100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+.main-logo-section {
+  display: flex;
+  flex-wrap: wrap; 
+  align-items: center; 
+  justify-content: space-between; 
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #1a1a1a;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+.main-logo-section h1 {
+  margin: 0;
+  font-size: 20px; 
+  color: #00f7ff;
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
+  flex-basis: calc(100% - 50px - 10px); 
+  max-width: calc(100% - 50px - 10px); 
+  line-height: 1.2; 
+  text-align: left; 
+  margin-right: 10px; 
+  box-sizing: border-box;
+  transition: font-size 0.3s ease;
+}
+.main-logo-section img {
+  width: 50px; 
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 8px rgba(0, 247, 255, 0.5);
+  flex-shrink: 0; 
+}
+`;
+      let titleToUseForGeneratedCode = currentTitleText; 
+      let generatedTitleStyle = `font-size: 20px; line-height: 1.2;`; 
+      if (titleToUseForGeneratedCode.length > 25) {
+          generatedTitleStyle = `font-size: 16px; line-height: 1.2;`;
+      } else if (titleToUseForGeneratedCode.length > 15) {
+          generatedTitleStyle = `font-size: 18px; line-height: 1.2;`;
+      }
+
+
+      let finalLogoAndTitleHtml = "";
+      if (currentLogoUrl || (customTitleInput.value.trim() !== "" && customTitleInput.value.trim() !== "Movie Update 2025")) {
+          if (currentLogoUrl) {
+              finalLogoAndTitleHtml = `
+<div class="main-logo-section">
+  <h1 style="${generatedTitleStyle}">${titleToUseForGeneratedCode}</h1>
+  <img src="${currentLogoUrl}" alt="${titleToUseForGeneratedCode} Logo" />
+</div>`;
+          } else {
+              finalLogoAndTitleHtml = `
+<div class="main-logo-section">
+  <h1 style="${generatedTitleStyle}">${titleToUseForGeneratedCode}</h1>
+</div>`;
+          }
+      }
+
+
+      const cardsHtmlForOutput = cardsData.map(card => `
+<div class="video-card">
+  <div class="thumbnail-wrapper">
+    <img src="${card.imgUrl}" alt="Thumbnail" />
+    <div class="duration">${card.duration}</div>
+  </div>
+  <a href="${card.downloadLink}" class="download-button" download>Download</a>
+</div>`).join('\n');
+
+      const htmlContent = finalLogoAndTitleHtml + cardsHtmlForOutput; 
+
+      const ogImageContent = currentLogoUrl ? currentLogoUrl : ""; 
+
+      const ogMetaTags = `
+<meta property="og:title" content="${titleToUseForGeneratedCode}" />
+<meta property="og:description" content="Get the latest movie updates and downloads." />
+<meta property="og:image" content="${ogImageContent}" />
+<meta property="og:url" content="YOUR_BLOG_POST_URL_HERE" />
+<meta property="og:type" content="website" />`;
+
+      if (cardsData.length > 0 || finalLogoAndTitleHtml !== "") {
+          return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Blogger Video Cards</title>
+${ogMetaTags}
+<style>
+${css}
+</style>
+</head>
+<body>
+${htmlContent}
+</body>
+</html>
+          `.trim();
+      } else {
+          return ""; 
+      }
+    }
+
+  </script>
+
+</body>
+</html>
